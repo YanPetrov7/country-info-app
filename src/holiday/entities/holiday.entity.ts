@@ -12,22 +12,27 @@ export class Holiday {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
-  title: string;
+  @Column({
+    type: 'varchar',
+    length: 2,
+  })
+  countryCode: string;
 
-  @Column({ type: 'date' })
-  date: Date;
+  @Column({
+    type: 'integer',
+    unsigned: true,
+  })
+  year: number;
 
-  @Column({ nullable: true })
-  countryCode?: string;
+  @Column('simple-array')
+  eventsNames: string[];
 
-  @Column({ type: 'integer', name: 'user_id', nullable: true })
-  user_id?: number | null;
+  @Column({ type: 'integer', name: 'user_id' })
+  userId: number;
 
   @ManyToOne(() => User, {
-    nullable: true,
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'user_id' })
-  User: User;
+  user: User;
 }

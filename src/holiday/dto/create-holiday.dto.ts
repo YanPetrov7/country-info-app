@@ -1,5 +1,6 @@
 import {
-  IsDateString,
+  IsArray,
+  IsInt,
   IsNotEmpty,
   IsOptional,
   IsString,
@@ -8,13 +9,14 @@ import {
 export class CreateHolidayDto {
   @IsString()
   @IsNotEmpty()
-  title: string;
-
-  @IsDateString()
-  @IsOptional()
-  date?: string;
-
-  @IsOptional()
-  @IsNotEmpty()
   countryCode: string;
+
+  @IsInt()
+  @IsNotEmpty()
+  year: number;
+
+  @IsArray()
+  @IsString({ each: true })
+  @IsOptional()
+  eventsNames?: string[];
 }

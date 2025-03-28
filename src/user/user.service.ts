@@ -1,6 +1,7 @@
 import {
   ConflictException,
   Injectable,
+  Logger,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -10,6 +11,8 @@ import { CreateUserDto } from './dto';
 
 @Injectable()
 export class UserService {
+  private readonly logger = new Logger(UserService.name);
+
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
@@ -27,19 +30,40 @@ export class UserService {
     return user;
   }
 
+  async findAll(): Promise<User[]> {
+    return this.userRepository.find();
+  }
+
   async create(dto: CreateUserDto): Promise<User> {
-    const existingUser = await this.userRepository.findOne({
-      where: [{ email: dto.email }],
+    try {
+      const existingUser = await this.userRepository.findOne({
+        where: [{ email: dto.email }],
+      });
+
+      if (existingUser) {
+        throw new ConflictException(
+          'User with such username or email already exists',
+        );
+      }
+
+      const user = this.userRepository.create(dto);
+
+      return this.userRepository.save(user);
+    } catch (e) {
+      this.logger.error('Error creating user', e);
+      throw new ConflictException('Error creating user');
+    }
+  }
+
+  async delete(id: number): Promise<void> {
+    const isUserExists = await this.userRepository.exists({
+      where: { id },
     });
 
-    if (existingUser) {
-      throw new ConflictException(
-        'User with such username or email already exists',
-      );
+    if (!isUserExists) {
+      throw new NotFoundException(`User with id ${id} not found`);
     }
 
-    const user = this.userRepository.create(dto);
-
-    return this.userRepository.save(user);
+    await this.userRepository.delete(id);
   }
 }
