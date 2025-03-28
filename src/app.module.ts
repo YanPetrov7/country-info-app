@@ -3,8 +3,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DatabaseModule } from './database/database.module';
 import { UserModule } from './user/user.module';
-import { CalendarModule } from './calendar/calendar.module';
 import { ConfigModule } from '@nestjs/config';
+import { HolidayModule } from './holiday/holiday.module';
 
 @Module({
   imports: [
@@ -14,7 +14,7 @@ import { ConfigModule } from '@nestjs/config';
     }),
     DatabaseModule,
     UserModule,
-    CalendarModule,
+    HolidayModule,
   ],
   controllers: [AppController],
   providers: [AppService],

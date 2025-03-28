@@ -1,7 +1,7 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { ConfigService } from '@nestjs/config';
 import { User } from '../../../user/entities';
-import { Calendar, CalendarEvent } from '../../../calendar/entities';
+import { Holiday } from '../../../holiday/entities';
 
 export const typeOrmConfig = (
   configService: ConfigService,
@@ -12,6 +12,6 @@ export const typeOrmConfig = (
   username: configService.get<string>('POSTGRES_USER'),
   password: configService.get<string>('POSTGRES_PASSWORD'),
   database: configService.get<string>('POSTGRES_DB'),
-  entities: [User, Calendar, CalendarEvent],
+  entities: [User, Holiday],
   synchronize: true,
 });

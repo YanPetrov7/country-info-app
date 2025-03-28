@@ -1,5 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne } from 'typeorm';
-import { Calendar } from '../../calendar/entities';
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @Entity()
 export class User {
@@ -14,7 +13,4 @@ export class User {
 
   @Column({ unique: true })
   email: string;
-
-  @OneToOne(() => Calendar, (calendar) => calendar.user, { cascade: true })
-  calendar: Calendar;
 }
