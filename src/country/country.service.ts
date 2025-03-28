@@ -79,26 +79,14 @@ export class CountryService {
         ),
       );
 
-      if (populationData.error) {
-        return [];
-      }
-
       // Get only the latest population count
-      return [
-        populationData.data.populationCounts
-          .sort((a, b) => parseInt(b.year) - parseInt(a.year))
-          .map((count) => ({
-            year: parseInt(count.year),
-            value: parseInt(count.value),
-          }))[0],
-      ];
+      return populationData.data.populationCounts.slice(-1);
     } catch (e) {
       this.logger.error(
         `Error fetching population for country ${countryCode}: ${e.message}`,
       );
-      throw new BadRequestException(
-        `Error fetching population for country ${countryCode}`,
-      );
+
+      return [];
     }
   }
 
@@ -107,14 +95,14 @@ export class CountryService {
       const { data } = await firstValueFrom(
         this.httpService.get(`${this.nagerApiUrl}/CountryInfo/${countryCode}`),
       );
-      return (data.borders || []).map((border) => border.commonName);
+
+      return data.borders.map((border) => border.commonName) || [];
     } catch (e) {
       this.logger.error(
         `Error fetching borders for country ${countryCode}: ${e.message}`,
       );
-      throw new BadRequestException(
-        `Error fetching borders for country ${countryCode}`,
-      );
+
+      return [];
     }
   }
 
@@ -130,9 +118,8 @@ export class CountryService {
       this.logger.error(
         `Error fetching flag for country ${countryCode}: ${e.message}`,
       );
-      throw new BadRequestException(
-        `Error fetching flag for country ${countryCode}`,
-      );
+
+      return null;
     }
   }
 }

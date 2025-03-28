@@ -34,7 +34,7 @@ npm i
 cp .env.example .env
 ```
 
-4. Configure environment variables in `.env`
+4. Configure environment variables in `.env` (or use the default ones).
 
 5. Start PostgreSQL database:
 ```bash
