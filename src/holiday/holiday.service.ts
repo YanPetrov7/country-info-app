@@ -62,7 +62,7 @@ export class HolidayService {
 
       return this.holidayRepository.save(holiday);
     } catch (e) {
-      this.logger.error('Error creating holiday', e);
+      this.logger.error('Error creating holiday', e.message);
       throw new BadRequestException('Error creating holiday', e.message);
     }
   }

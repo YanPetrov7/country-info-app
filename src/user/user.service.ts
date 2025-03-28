@@ -41,29 +41,32 @@ export class UserService {
       });
 
       if (existingUser) {
-        throw new ConflictException(
-          'User with such username or email already exists',
-        );
+        throw new ConflictException('User with such email already exists');
       }
 
       const user = this.userRepository.create(dto);
 
       return this.userRepository.save(user);
     } catch (e) {
-      this.logger.error('Error creating user', e);
-      throw new ConflictException('Error creating user');
+      this.logger.error('Error creating user', e.message);
+      throw new ConflictException('Error creating user', e.message);
     }
   }
 
   async delete(id: number): Promise<void> {
-    const isUserExists = await this.userRepository.exists({
-      where: { id },
-    });
+    try {
+      const isUserExists = await this.userRepository.exists({
+        where: { id },
+      });
 
-    if (!isUserExists) {
-      throw new NotFoundException(`User with id ${id} not found`);
+      if (!isUserExists) {
+        throw new NotFoundException(`User with id ${id} not found`);
+      }
+
+      await this.userRepository.delete(id);
+    } catch (e) {
+      this.logger.error('Error deleting user', e.message);
+      throw new NotFoundException('Error deleting user', e.message);
     }
-
-    await this.userRepository.delete(id);
   }
 }
