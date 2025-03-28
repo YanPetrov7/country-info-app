@@ -1,13 +1,21 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { HolidayModule } from './holiday/holiday.module';
-import { CountryModule } from './country/country.module';
-import { CalendarEventModule } from './calendar-event/calendar-event.module';
 import { DatabaseModule } from './database/database.module';
+import { UserModule } from './user/user.module';
+import { CalendarModule } from './calendar/calendar.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [HolidayModule, CountryModule, CalendarEventModule, DatabaseModule],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: '.env',
+    }),
+    DatabaseModule,
+    UserModule,
+    CalendarModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
